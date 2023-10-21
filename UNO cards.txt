@@ -1,0 +1,108 @@
+0_red_forward 1_+0_red 0
+1_red_forward 1_+0_red 1
+1_red_forward 1_+0_red 1
+2_red_forward 1_+0_red 2
+2_red_forward 1_+0_red 2
+3_red_forward 1_+0_red 3
+3_red_forward 1_+0_red 3
+4_red_forward 1_+0_red 4
+4_red_forward 1_+0_red 4
+5_red_forward 1_+0_red 5
+5_red_forward 1_+0_red 5
+6_red_forward 1_+0_red 6
+6_red_forward 1_+0_red 6
+7_red_forward 1_+0_red 7
+7_red_forward 1_+0_red 7
+8_red_forward 1_+0_red 8
+8_red_forward 1_+0_red 8
+9_red_forward 1_+0_red 9
+9_red_forward 1_+0_red 9
+0_green_forward 1_+0_green 0
+1_green_forward 1_+0_green 1
+1_green_forward 1_+0_green 1
+2_green_forward 1_+0_green 2
+2_green_forward 1_+0_green 2
+3_green_forward 1_+0_green 3
+3_green_forward 1_+0_green 3
+4_green_forward 1_+0_green 4
+4_green_forward 1_+0_green 4
+5_green_forward 1_+0_green 5
+5_green_forward 1_+0_green 5
+6_green_forward 1_+0_green 6
+6_green_forward 1_+0_green 6
+7_green_forward 1_+0_green 7
+7_green_forward 1_+0_green 7
+8_green_forward 1_+0_green 8
+8_green_forward 1_+0_green 8
+9_green_forward 1_+0_green 9
+9_green_forward 1_+0_green 9
+0_blue_forward 1_+0_blue 0
+1_blue_forward 1_+0_blue 1
+1_blue_forward 1_+0_blue 1
+2_blue_forward 1_+0_blue 2
+2_blue_forward 1_+0_blue 2
+3_blue_forward 1_+0_blue 3
+3_blue_forward 1_+0_blue 3
+4_blue_forward 1_+0_blue 4
+4_blue_forward 1_+0_blue 4
+5_blue_forward 1_+0_blue 5
+5_blue_forward 1_+0_blue 5
+6_blue_forward 1_+0_blue 6
+6_blue_forward 1_+0_blue 6
+7_blue_forward 1_+0_blue 7
+7_blue_forward 1_+0_blue 7
+8_blue_forward 1_+0_blue 8
+8_blue_forward 1_+0_blue 8
+9_blue_forward 1_+0_blue 9
+9_blue_forward 1_+0_blue 9
+0_yellow_forward 1_+0_yellow 0
+1_yellow_forward 1_+0_yellow 1
+1_yellow_forward 1_+0_yellow 1
+2_yellow_forward 1_+0_yellow 2
+2_yellow_forward 1_+0_yellow 2
+3_yellow_forward 1_+0_yellow 3
+3_yellow_forward 1_+0_yellow 3
+4_yellow_forward 1_+0_yellow 4
+4_yellow_forward 1_+0_yellow 4
+5_yellow_forward 1_+0_yellow 5
+5_yellow_forward 1_+0_yellow 5
+6_yellow_forward 1_+0_yellow 6
+6_yellow_forward 1_+0_yellow 6
+7_yellow_forward 1_+0_yellow 7
+7_yellow_forward 1_+0_yellow 7
+8_yellow_forward 1_+0_yellow 8
+8_yellow_forward 1_+0_yellow 8
+9_yellow_forward 1_+0_yellow 9
+9_yellow_forward 1_+0_yellow 9
+-2_red_forward 1_+2_red beri 2
+-2_red_forward 1_+2_red beri 2
+-2_green_forward 1_+2_green beri 2
+-2_green_forward 1_+2_green beri 2
+-2_blue_forward 1_+2_blue beri 2
+-2_blue_forward 1_+2_blue beri 2
+-2_yellow_forward 1_+2_yellow beri 2
+-2_yellow_forward 1_+2_yellow beri 2
+-3_red_through 1_+0_red propusk hoda
+-3_red_through 1_+0_red propusk hoda
+-3_green_through 1_+0_green propusk hoda
+-3_green_through 1_+0_green propusk hoda
+-3_blue_through 1_+0_blue propusk hoda
+-3_blue_through 1_+0_blue propusk hoda
+-3_yellow_through 1_+0_yellow propusk hoda
+-3_yellow_through 1_+0_yellow propusk hoda
+-4_red_back 1_+0_red smena hoda
+-4_red_back 1_+0_red smena hoda
+-4_green_back 1_+0_green smena hoda
+-4_green_back 1_+0_green smena hoda
+-4_blue_back 1_+0_blue smena hoda
+-4_blue_back 1_+0_blue smena hoda
+-4_yellow_back 1_+0_yellow smena hoda
+-4_yellow_back 1_+0_yellow smena hoda
+universal_universal_forward 1_+4_beri 4
+universal_universal_forward 1_+4_beri 4
+universal_universal_forward 1_+4_beri 4
+universal_universal_forward 1_+4_beri 4
+universal_universal_forward 1_+0_smena cveta
+universal_universal_forward 1_+0_smena cveta
+universal_universal_forward 1_+0_smena cveta
+universal_universal_forward 1_+0_smena cveta
