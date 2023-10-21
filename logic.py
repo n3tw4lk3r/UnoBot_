@@ -1,6 +1,6 @@
-import telebot
 import numpy as np
-file = open("UNO cards.txt", 'r')
+import unoBot
+
 class card:
     def __init__(self, num, col, step, count_cards, name_of_card):
         if num == 'universal':
@@ -74,37 +74,47 @@ def put_card(ind):
 def game():
     global player, deck_of_cards, pos, top_of_deck, step
     while True:
-        print('верхняя карта:', top_of_deck.name)
-        print(player[pos].name, ' выбери номер карты, которую кинешь')
+        unoBot.bot.send_message(unoBot.CHAT_ID, 'верхняя карта: ' + str(top_of_deck.name))
+        unoBot.bot.send_message(unoBot.CHAT_ID, str(player[pos].name) +' выбери номер карты, которую кинешь')
+        msg = ""
         for i in range(len(player[pos].cards)):
-            print('( ', i, ': ', player[pos].cards[i].name, ' )', end = ' ')
-        print()
+            msg += '( '+ str(i) + ': ' + str(player[pos].cards[i].name) +  ' )\n'
+        unoBot.bot.send_message(unoBot.CHAT_ID, msg)
+
         if all(can_put_card(i) == False for i in range(len(player[pos].cards))):
-            print('ну блииин( бери карту   (напиши: взять карту')
-            input()
+            unoBot.bot.send_message(unoBot.CHAT_ID, 'ну блииин( бери карту   (напиши: взять карту')
+            while player_hasActed[player[pos].name] == False:
+                pass
+            player_hasActed[player[pos].name] = False
+
             player[pos].cards.append(take_top_card())
             num = len(player[pos].cards) - 1
-            print('( ', num, ': ', player[pos].cards[num].name, ' )', end = ' ')
-            print()
+            msg = '( '+ str(num) + ': ' + str(player[pos].cards[num].name) +  ' )'
+            #unoBot.bot.send_message(unoBot.CHAT_ID, msg)
             if can_put_card(num):
                 put_card(num)
-                print('урааа карта подошлааа')
+                unoBot.bot.send_message(unoBot.CHAT_ID, 'урааа карта подошлааа')
             else:
-                print('Лошарик, пропускаешь ход')
+                unoBot.bot.send_message(unoBot.CHAT_ID, 'Лошарик, пропускаешь ход')
                 pos = (len(player) + pos + step) % len(player)
         else:
             while True:
-                num = int(input())
+                #num = int(input())
+
+                while player_hasActed[player[pos].name] == False:
+                    pass
+                player_hasActed[player[pos].name] = False
+                num = player_lastMove[player[pos].name]
+
                 if can_put_card(num):
                     put_card(num)
                     break
                 else:
-                    print('Дурачок попробуй ещё')
+                    unoBot.bot.send_message(unoBot.CHAT_ID, 'Дурачок попробуй ещё')
         if any(len(player[i].cards) == 0 for i in range(len(player))):
             return
 
-
-#
+file = open("UNO cards.txt", 'r')
 cards = []
 while True:
     mas = file.readline().strip()
@@ -113,21 +123,9 @@ while True:
     mas = mas.split('_')
     cards.append(card(mas[0], mas[1], mas[2], mas[3], mas[4]))
 file.close()
+
 index_in_cards = [i for i in range(len(cards))]
 player = []
+player_hasActed = {}
+player_lastMove = {}
 deck_of_cards = []
-print('Создай свою игру')
-while True:
-    print('add <Имя игрока> - добавление нового игрока')
-    print('start game - начать игру')
-    st = input()
-    if st[:3] == 'add':
-        player.append(players(st[4:]))
-        print('Игрок ' + st[4:] + ' добавлен')
-    if st == 'start game':
-        break
-#
-construct_game()
-print('Игра началась)))')
-game()
-print('Игра закончилась ну блииииин(((09((09(((')
