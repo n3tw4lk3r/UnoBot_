@@ -21,7 +21,7 @@ def main(info):
 def main(info):
     global CHAT_ID
     CHAT_ID = info.chat.id
-    bot.send_message(info.chat.id, 
+    bot.send_message(info.chat.id,
     '''Охаё, они чан) Создай свою игру\n
     /add <Имя игрока> - добавление нового игрока\n
     /play             - начать игру\n
@@ -43,11 +43,18 @@ def main(info):
 
 @bot.message_handler(commands=['move'])
 def main(info):
-    move = info.text.split()[1]
-    player = info.from_user.first_name
-    if move.isdigit() and logic.player[logic.pos].name == player:
+    if len(info.text.split()) > 1:
+        move = info.text.split()[1]
+        player = info.from_user.first_name
+        if move.isdigit() and logic.player[logic.pos].name == player:
+            logic.player_hasActed[player] = True
+            logic.player_lastMove[player] = int(move)
+        else:
+            bot.send_message(info.chat.id, 'балбес, напиши нормально')
+    else:
         logic.player_hasActed[player] = True
-        logic.player_lastMove[player] = int(move)
+
+#todo пофиксить функцию сверху, чтобы можно было брать карту из колоды
 
 @bot.message_handler(commands=['admin'])
 def main(info):
