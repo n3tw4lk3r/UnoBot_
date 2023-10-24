@@ -5,9 +5,6 @@ import logic
 bot = telebot.TeleBot('6872862815:AAEDh0fdb15g8XCjghcW4RIJlLOnsEG_i6M')
 CHAT_ID = None
 
-@bot.message_handler(commands=['xxl'])
-def main(info):
-    webbrowser.open('https://rt.pornhub.com')
 
 @bot.message_handler(commands=['xxx'])
 def main(info):
