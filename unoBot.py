@@ -70,8 +70,6 @@ def button_message(info):
 
 @bot.message_handler(content_types='text')
 def message_reply(message):
-    if message.text=="Кнопка":
-        bot.send_message(message.chat.id,"https://rt.pornhub.com")
     if message.text=="Присоединиться":
         bot.send_message(message.chat.id, f'Игрок {message.from_user.first_name} добавлен')
         logic.player.append(logic.players(message.from_user.first_name))
