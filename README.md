@@ -1,2 +1,8 @@
-# UnoBot_MEPhI
-Educational project to create a telegram bot to play Uno
+UnoBot_MEPhI
+Educational project to create a telegram bot to play Uno.
+
+ИИКС НИЯУ МИФИ. Проектная практика
+
+Разработка телеграм-бота для игры в Uno.
+
+Разработчики: Бедин Роман (Б23-501), Полуэктов Никита (Б23-501), Ходаков Павел (Б23-544)
