@@ -5,24 +5,18 @@ import logic
 bot = telebot.TeleBot('6872862815:AAEDh0fdb15g8XCjghcW4RIJlLOnsEG_i6M')
 CHAT_ID = None
 
-
-@bot.message_handler(commands=['xxx'])
-def main(info):
-    types.InlineKeyboardMarkup
-
 @bot.message_handler(commands=['start'])
 def main(info):
     bot.send_message(info.chat.id, 'Hello, first timers.')
 
 @bot.message_handler(commands=['start_game'])
 def main(info):
+    if logic.is_playing:
+        return
     global CHAT_ID
     CHAT_ID = info.chat.id
     bot.send_message(info.chat.id,
     '''Охаё, они чан) Создай свою игру\n
-    /add <Имя игрока> - добавление нового игрока\n
-    /play             - начать игру\n
-    /stats            - состояние игры
     '''
     )
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -33,25 +27,29 @@ def main(info):
 
 @bot.message_handler(commands=['stats'])
 def main(info):
-    msg = "Увожаемые игроки:\n"
+    msg = "Уважаемые игроки:\n"
     for p in logic.player:
         msg += str(p.name) + "\n"
     #bot.send_message(info.chat.id, msg)
 
 @bot.message_handler(commands=['move'])
 def main(info):
+    player = info.from_user.first_name
     if len(info.text.split()) > 1:
         move = info.text.split()[1]
-        player = info.from_user.first_name
-        if move.isdigit() and logic.player[logic.pos].name == player:
-            logic.player_hasActed[player] = True
-            logic.player_lastMove[player] = int(move)
-        else:
-            bot.send_message(info.chat.id, 'балбес, напиши нормально')
+        if logic.player[logic.pos].name == player:
+            if move.isdigit() and 0 <= int(move) and int(move) < len(logic.player[logic.pos].cards):
+                logic.player_hasActed[player] = True
+                logic.player_lastMove[player] = int(move)
+            else:
+                bot.send_message(info.chat.id, 'балбес, напиши нормально')
     else:
         logic.player_hasActed[player] = True
+        logic.player_lastMove[player] = -1
 
-#todo пофиксить функцию сверху, чтобы можно было брать карту из колоды
+@bot.message_handler(commands=['end_game'])
+def main(info):
+    logic.is_playing = False
 
 @bot.message_handler(commands=['admin'])
 def main(info):
@@ -70,15 +68,15 @@ def button_message(info):
 
 @bot.message_handler(content_types='text')
 def message_reply(message):
+    if message.text=="Кнопка":
+        bot.send_message(message.chat.id,"https://rt.pornhub.com")
     if message.text=="Присоединиться":
-        bot.send_message(message.chat.id, f'Игрок {message.from_user.first_name} добавлен')
-        logic.player.append(logic.players(message.from_user.first_name))
-        logic.player_hasActed[message.from_user.first_name] = False
+        if message.from_user.first_name not in logic.player_hasActed:
+            bot.send_message(message.chat.id, f'Игрок {message.from_user.first_name} добавлен')
+            logic.add_player(message.from_user.first_name)
     if message.text=="Начать игру":
+        if logic.is_playing or len(logic.player) == 0:
+            return
         global CHAT_ID
         CHAT_ID = message.chat.id
-        bot.send_message(message.chat.id, 'Да начнётся игра!!111')
-        logic.construct_game()
-        bot.send_message(message.chat.id, 'Игра началась)))')
         logic.game()
-        bot.send_message(message.chat.id, 'Игра закончилась ну блииииин(((09((09(((')
