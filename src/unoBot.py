@@ -64,6 +64,11 @@ def main(info):
     msg = 'Сам себе помаги!\n Но если прям надо то: \n /start_game - запускает игру \n /end_game - заканчивает игру \n /move - выбор карты из руки или взять карту\n /admin - связь с админами'
     bot.send_message(info.chat.id, msg)
 
+@bot.message_handler(commands=['join'])
+def message_reply(message):
+    if message.from_user.first_name not in logic.player_hasActed:
+        bot.send_message(message.chat.id, f'Игрок {message.from_user.first_name} добавлен')
+        logic.add_player(message.from_user.first_name)
 
 @bot.message_handler(content_types='text')
 def message_reply(message):
