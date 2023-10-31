@@ -61,7 +61,7 @@ def main(info):
 
 @bot.message_handler(commands=['help'])
 def main(info):
-    msg = 'Сам себе помаги!\n Но если прям надо то: \n /start_game - запускает игру \n /end_game - заканчивает игру \n /move - выбор карты из руки или взять карту'
+    msg = 'Сам себе помаги!\n Но если прям надо то: \n /start_game - запускает игру \n /end_game - заканчивает игру \n /move - выбор карты из руки или взять карту\n /admin - связь с админами'
     bot.send_message(info.chat.id, msg)
 
 
