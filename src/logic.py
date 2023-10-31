@@ -2,7 +2,7 @@ import numpy as np
 import unoBot
 
 class card:
-    def __init__(self, num, col, step, count_cards, name_of_card):
+    def __init__(self, num, col, step, count_cards, name_of_card, stiker_id):
         if num == 'universal':
             self.number = -1
         else:
@@ -16,7 +16,7 @@ class card:
             self.change_of_step = int(step[step.find(' ') + 1:]) + 1
         self.cards_to_next_player = int(count_cards[1:])
         self.name = name_of_card
-
+        self.stiker = stiker_id
 
 class players:
     def __init__(self, st):
@@ -47,7 +47,6 @@ def add_player(name):
     for j in range(7):
         player[len(player) - 1].cards.append(take_top_card())
 
-############################################################################## Проблема в неправильном определении возможности положить две карты разных цветов, но разных специальных действий
 def can_put_card(ind):
     global player, top_of_deck, pos
     if ((player[pos].cards[ind].number == top_of_deck.number or player[pos].cards[ind].color == top_of_deck.color)) or (player[pos].cards[ind].number == -1 and player[pos].cards[ind].color == 'universal') or (top_of_deck.number == -1 and top_of_deck.color == 'universal'):
@@ -78,6 +77,7 @@ def game():
     top_of_deck = take_top_card()
     while is_playing:
         unoBot.bot.send_message(unoBot.CHAT_ID, 'верхняя карта: ' + str(top_of_deck.name))
+        unoBot.bot.send_sticker(unoBot.CHAT_ID, top_of_deck.stiker)
         unoBot.bot.send_message(unoBot.CHAT_ID, str(player[pos].name) +' выбери номер карты, которую кинешь или возьми из колоды (/move)')
         msg = ""
         for i in range(len(player[pos].cards)):
@@ -139,7 +139,12 @@ while True:
     if not mas:
         break
     mas = mas.split('_')
-    cards.append(card(mas[0], mas[1], mas[2], mas[3], mas[4]))
+    st = mas[5]
+    i = 6
+    while i < len(mas):
+        st += '_' + mas[i]
+        i += 1
+    cards.append(card(mas[0], mas[1], mas[2], mas[3], mas[4], st))
 file.close()
 
 index_in_cards = [i for i in range(len(cards))]
