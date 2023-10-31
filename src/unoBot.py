@@ -72,6 +72,8 @@ def message_reply(message):
             bot.send_message(message.chat.id, f'Игрок {message.from_user.first_name} добавлен')
             logic.add_player(message.from_user.first_name)
     if message.text=="Начать игру":
+        markup = telebot.types.ReplyKeyboardRemove()
+        bot.send_message(message.chat.id, "Да начнётся игра!!111    ", reply_markup=markup)
         if logic.is_playing or len(logic.player) == 0:
             return
         global CHAT_ID
