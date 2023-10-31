@@ -7,7 +7,7 @@ CHAT_ID = None
 
 @bot.message_handler(commands=['start'])
 def main(info):
-    bot.send_message(info.chat.id, 'Hello, first timers.')
+    bot.send_message(info.chat.id, 'Этот бот предназначен для проведения игры уно в телеграмме. Для запуска игры добавьте бота в свою группу, и напишите /start_game.')
 
 @bot.message_handler(commands=['start_game'])
 def main(info):
@@ -30,7 +30,11 @@ def main(info):
     msg = "Уважаемые игроки:\n"
     for p in logic.player:
         msg += str(p.name) + "\n"
-    #bot.send_message(info.chat.id, msg)
+    bot.send_message(info.chat.id, msg)
+
+@bot.message_handler(commands=['stiker'])
+def main(info):
+    bot.send_sticker(info.chat.id, 'CAACAgIAAxkBAAEBpnZlPXSscqnvN_rM-uZusGxvanFG2wACuCQAArgGAUiH8Vp5cuhbHDAE')
 
 @bot.message_handler(commands=['move'])
 def main(info):
@@ -57,19 +61,12 @@ def main(info):
 
 @bot.message_handler(commands=['help'])
 def main(info):
-    bot.send_message(info.chat.id, f'Сам себе помаги, {info.from_user.first_name}')
+    msg = 'Сам себе помаги!\n Но если прям надо то: \n /start_game - запускает игру \n /end_game - заканчивает игру \n /move - выбор карты из руки или взять карту'
+    bot.send_message(info.chat.id, msg)
 
-@bot.message_handler(commands=['button'])
-def button_message(info):
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    item1 = types.KeyboardButton("Кнопка")
-    markup.add(item1)
-    bot.send_message(info.chat.id, 'Выберите что вам надо', reply_markup=markup)
 
 @bot.message_handler(content_types='text')
 def message_reply(message):
-    if message.text=="Кнопка":
-        bot.send_message(message.chat.id,"https://rt.pornhub.com")
     if message.text=="Присоединиться":
         if message.from_user.first_name not in logic.player_hasActed:
             bot.send_message(message.chat.id, f'Игрок {message.from_user.first_name} добавлен')
