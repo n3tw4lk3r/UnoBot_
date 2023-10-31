@@ -69,8 +69,6 @@ def put_card(ind):
 
 def game():
     global player, deck_of_cards, pos, top_of_deck, step, player_hasActed, is_playing, player_lastMove
-    unoBot.bot.send_message(unoBot.CHAT_ID, 'Да начнётся игра!!111')
-    unoBot.bot.send_message(unoBot.CHAT_ID, 'Игра началась)))')
     is_playing = True
     pos = 0
     step = 1
