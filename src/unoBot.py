@@ -62,9 +62,14 @@ def main(info):
         bot.send_message(info.chat.id, 'Игра не запущена(')
 @bot.message_handler(commands=['end_game'])
 def main(info):
-    logic.is_playing = False
     markup = telebot.types.ReplyKeyboardRemove()
-    bot.send_message(info.chat.id, "Сделайте ход для завершения игры", reply_markup=markup)
+    bot.send_message(CHAT_ID, 'Игра закончилась ну блииииин(((09((09(((', reply_markup=markup)
+    logic.player = []
+    logic.player_hasActed = {}
+    logic.player_lastMove = {}
+    logic.deck_of_cards = []
+    logic.pos = 0
+    logic.is_playing = False
 
 @bot.message_handler(commands=['admin'])
 def main(info):
