@@ -65,8 +65,8 @@ def main(info):
     if logic.is_playing:
         markup = telebot.types.ReplyKeyboardRemove()
         bot.send_message(CHAT_ID, 'Игра закончилась ну блииииин(((09((09(((', reply_markup=markup)
-        logic.is_playing = False
-        logic.player_hasActed[logic.player[logic.pos].name] = True
+        logic.clear_fields()
+        #logic.player_hasActed[logic.player[logic.pos].name] = True
     else:
         markup = telebot.types.ReplyKeyboardRemove()
         bot.send_message(info.chat.id, 'игра не запущена', reply_markup=markup)
