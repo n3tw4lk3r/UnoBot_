@@ -74,6 +74,7 @@ def game():
     pos = 0
     step = 1
     top_of_deck = take_top_card()
+
     while is_playing:
         unoBot.bot.send_message(unoBot.CHAT_ID, 'верхняя карта: ' + str(top_of_deck.name))
         unoBot.bot.send_sticker(unoBot.CHAT_ID, top_of_deck.stiker)
@@ -108,11 +109,13 @@ def game():
         else:
             count_move = 0
             while True:
+                try:
+                    a = player_hasActed[player[pos].name]
+                except IndexError:
+                    return
                 while player_hasActed[player[pos].name] == False:
                     pass
                 player_hasActed[player[pos].name] = False
-                if not is_playing:
-                    continue
                 num = player_lastMove[player[pos].name]
                 if num == -1:
                     if count_move == 0:
