@@ -126,6 +126,13 @@ def game():
                             msg = '( ' + str(num) + ': ' + str(player[pos].cards[num].name) + ' )'
                             unoBot.bot.send_message(player[pos].id, msg)
                             count_move += 1
+                            buttons = [unoBot.types.KeyboardButton("/move")]
+                            keyboard = unoBot.types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=5)
+                            for i in range(len(player[pos].cards)):
+                                msgg = '/move ' + str(i)
+                                buttons.append(unoBot.types.KeyboardButton(msgg))
+                            keyboard.add(*buttons)
+                            unoBot.bot.send_message(unoBot.CHAT_ID, "Карта добавлена", reply_markup=keyboard)
                         else:
                             unoBot.bot.send_message(unoBot.CHAT_ID, 'хватит тырить карты из колоды')
                     else:
