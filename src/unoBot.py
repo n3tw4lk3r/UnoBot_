@@ -45,19 +45,21 @@ def main(info):
 
 @bot.message_handler(commands=['move'])
 def main(info):
-    player = info.from_user.first_name
-    if len(info.text.split()) > 1:
-        move = info.text.split()[1]
-        if logic.player[logic.pos].name == player:
-            if move.isdigit() and 0 <= int(move) and int(move) < len(logic.player[logic.pos].cards):
-                logic.player_hasActed[player] = True
-                logic.player_lastMove[player] = int(move)
-            else:
-                bot.send_message(info.chat.id, 'балбес, напиши нормально')
+    if logic.is_playing:
+        player = info.from_user.first_name
+        if len(info.text.split()) > 1:
+            move = info.text.split()[1]
+            if logic.player[logic.pos].name == player:
+                if move.isdigit() and 0 <= int(move) and int(move) < len(logic.player[logic.pos].cards):
+                    logic.player_hasActed[player] = True
+                    logic.player_lastMove[player] = int(move)
+                else:
+                     bot.send_message(info.chat.id, 'балбес, напиши нормально')
+        else:
+            logic.player_hasActed[player] = True
+            logic.player_lastMove[player] = -1
     else:
-        logic.player_hasActed[player] = True
-        logic.player_lastMove[player] = -1
-
+        bot.send_message(info.chat.id, 'Игра не запущена(')
 @bot.message_handler(commands=['end_game'])
 def main(info):
     logic.is_playing = False
@@ -77,7 +79,12 @@ def main(info):
 def message_reply(message):
     if message.from_user.first_name not in logic.player_hasActed:
         bot.send_message(message.chat.id, f'Игрок {message.from_user.first_name} добавлен')
-        logic.add_player(message.from_user.first_name)
+        logic.add_player(message.from_user.first_name, message.from_user.id)
+
+@bot.message_handler(commands=['clear'])
+def message_reply(message):
+    markup = telebot.types.ReplyKeyboardRemove()
+    bot.send_message(message.chat.id, "Очищаю кнопочки", reply_markup=markup)
 
 @bot.message_handler(content_types='text')
 def message_reply(message):
@@ -87,9 +94,10 @@ def message_reply(message):
             logic.add_player(message.from_user.first_name, message.from_user.id)
     if message.text=="Начать игру":
         markup = telebot.types.ReplyKeyboardRemove()
-        bot.send_message(message.chat.id, "Да начнётся игра!!111", reply_markup=markup)
         if logic.is_playing or len(logic.player) == 0:
+            bot.send_message(message.chat.id, "Что-то пошло не так(", reply_markup=markup)
             return
         global CHAT_ID
+        bot.send_message(message.chat.id, "Да нчнётся игра!!!))", reply_markup=markup)
         CHAT_ID = message.chat.id
         logic.game()
