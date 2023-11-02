@@ -1,5 +1,6 @@
 import numpy as np
 import unoBot
+from telebot import types
 
 class card:
     def __init__(self, num, col, step, count_cards, name_of_card, stiker_id):
@@ -19,9 +20,10 @@ class card:
         self.stiker = stiker_id
 
 class players:
-    def __init__(self, st):
+    def __init__(self, st, idd):
         self.name = st
         self.cards = []
+        self.id = idd
 
 
 def new_deck():
@@ -40,9 +42,9 @@ def take_top_card():
     deck_of_cards = deck_of_cards[1:]
     return ans
 
-def add_player(name):
+def add_player(name, iid):
     global player, player_hasActed
-    player.append(players(name))
+    player.append(players(name, iid))
     player_hasActed[name] = False
     for j in range(7):
         player[len(player) - 1].cards.append(take_top_card())
@@ -76,14 +78,19 @@ def game():
     while is_playing:
         unoBot.bot.send_message(unoBot.CHAT_ID, 'верхняя карта: ' + str(top_of_deck.name))
         unoBot.bot.send_sticker(unoBot.CHAT_ID, top_of_deck.stiker)
-        unoBot.bot.send_message(unoBot.CHAT_ID, str(player[pos].name) +' выбери номер карты, которую кинешь или возьми из колоды (/move)')
         msg = ""
+        buttons = []
+        keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=7)
         for i in range(len(player[pos].cards)):
-            msg += '( '+ str(i) + ': ' + str(player[pos].cards[i].name) +  ' )\n'
-        unoBot.bot.send_message(unoBot.CHAT_ID, msg)
+            msg += '( ' + str(i) + ': ' + str(player[pos].cards[i].name) + ' )\n'
+            msgg = '/move ' + str(i)
+            buttons.append(types.KeyboardButton(msgg))
+        keyboard.add(*buttons)
+        unoBot.bot.send_message(player[pos].id, msg)
+        unoBot.bot.send_message(unoBot.CHAT_ID, str(player[pos].name) +' выбери номер карты, которую кинешь или возьми из колоды (/move)', reply_markup=keyboard)
 
         if all(can_put_card(i) == False for i in range(len(player[pos].cards))):
-            unoBot.bot.send_message(unoBot.CHAT_ID, 'ну блииин( бери карту   (напиши: /move')
+            unoBot.bot.send_message(player[pos].id, 'ну блииин( бери карту   (напиши: /move')
             while player_hasActed[player[pos].name] == False:
                 pass
             player_hasActed[player[pos].name] = False
