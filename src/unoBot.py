@@ -62,15 +62,14 @@ def main(info):
         bot.send_message(info.chat.id, 'Игра не запущена(')
 @bot.message_handler(commands=['end_game'])
 def main(info):
-    markup = telebot.types.ReplyKeyboardRemove()
-    bot.send_message(CHAT_ID, 'Игра закончилась ну блииииин(((09((09(((', reply_markup=markup)
-    logic.player = []
-    logic.player_hasActed = {}
-    logic.player_lastMove = {}
-    logic.deck_of_cards = []
-    logic.pos = 0
-    logic.is_playing = False
-
+    if logic.is_playing:
+        markup = telebot.types.ReplyKeyboardRemove()
+        bot.send_message(CHAT_ID, 'Игра закончилась ну блииииин(((09((09(((', reply_markup=markup)
+        logic.is_playing = False
+        logic.player_hasActed[logic.player[logic.pos].name] = True
+    else:
+        markup = telebot.types.ReplyKeyboardRemove()
+        bot.send_message(info.chat.id, 'игра не запущена', reply_markup=markup)
 @bot.message_handler(commands=['admin'])
 def main(info):
     bot.send_message(info.chat.id, 'Писать по всем вопросам:@rbedin25, @shout_0_0, @n3tw4lk3r')
@@ -103,6 +102,6 @@ def message_reply(message):
             bot.send_message(message.chat.id, "Что-то пошло не так(", reply_markup=markup)
             return
         global CHAT_ID
-        bot.send_message(message.chat.id, "Да нчнётся игра!!!))", reply_markup=markup)
+        bot.send_message(message.chat.id, "Да начнётся игра!!!))", reply_markup=markup)
         CHAT_ID = message.chat.id
         logic.game()
