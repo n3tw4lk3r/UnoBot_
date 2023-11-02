@@ -94,7 +94,8 @@ def game():
             while player_hasActed[player[pos].name] == False:
                 pass
             player_hasActed[player[pos].name] = False
-
+            if not is_playing:
+                continue
             player[pos].cards.append(take_top_card())
             num = len(player[pos].cards) - 1
             msg = '( '+ str(num) + ': ' + str(player[pos].cards[num].name) +  ' )'
@@ -111,6 +112,8 @@ def game():
                 while player_hasActed[player[pos].name] == False:
                     pass
                 player_hasActed[player[pos].name] = False
+                if not is_playing:
+                    continue
                 num = player_lastMove[player[pos].name]
                 if num == -1:
                     if count_move == 0:
@@ -137,6 +140,7 @@ def game():
     deck_of_cards = []
     pos = 0
     is_playing = False
+    unoBot.bot.send_message(unoBot.CHAT_ID, 'все поля очищены')
 file = open("UNO cards.txt", 'r')
 cards = []
 while True:
