@@ -80,14 +80,14 @@ def game():
         unoBot.bot.send_sticker(unoBot.CHAT_ID, top_of_deck.stiker)
         msg = ""
         buttons = [types.KeyboardButton("/move")]
-        keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=5)
+        keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=5, selective=True)
         for i in range(len(player[pos].cards)):
             msg += '( ' + str(i) + ': ' + str(player[pos].cards[i].name) + ' )\n'
             msgg = '/move ' + str(i)
             buttons.append(types.KeyboardButton(msgg))
         keyboard.add(*buttons)
         unoBot.bot.send_message(player[pos].id, msg)
-        unoBot.bot.send_message(unoBot.CHAT_ID, str(player[pos].name) +' выбери номер карты, которую кинешь или возьми из колоды (/move)', reply_markup=keyboard)
+        unoBot.bot.send_message(unoBot.CHAT_ID, '@' + str(player[pos].name) +' выбери номер карты, которую кинешь или возьми из колоды (/move)', reply_markup=keyboard)
 
         if all(can_put_card(i) == False for i in range(len(player[pos].cards))):
             unoBot.bot.send_message(player[pos].id, 'ну блииин( бери карту   (напиши: /move')
