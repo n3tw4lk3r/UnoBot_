@@ -32,6 +32,13 @@ def main(info):
         msg += str(p.name) + "\n"
     bot.send_message(info.chat.id, msg)
 
+@bot.message_handler(commands=['bomb'])
+async def cmd_bomb(message: types.Message):
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1, selective=True)
+    buttons = ['"Небольшой толчок..."', 'Разминировать']
+    keyboard.add(*buttons)
+    await message.reply('Решается судьба Мегатонны...', reply_markup=keyboard)
+
 @bot.message_handler(commands=['stiker'])
 def main(info):
     bot.send_sticker(info.chat.id, 'CAACAgIAAxkBAAEBpnZlPXSscqnvN_rM-uZusGxvanFG2wACuCQAArgGAUiH8Vp5cuhbHDAE')
@@ -54,6 +61,8 @@ def main(info):
 @bot.message_handler(commands=['end_game'])
 def main(info):
     logic.is_playing = False
+    markup = telebot.types.ReplyKeyboardRemove()
+    bot.send_message(info.chat.id, "Сделайте ход для завершения игры", reply_markup=markup)
 
 @bot.message_handler(commands=['admin'])
 def main(info):
@@ -75,10 +84,10 @@ def message_reply(message):
     if message.text=="Присоединиться":
         if message.from_user.first_name not in logic.player_hasActed:
             bot.send_message(message.chat.id, f'Игрок {message.from_user.first_name} добавлен')
-            logic.add_player(message.from_user.first_name)
+            logic.add_player(message.from_user.first_name, message.from_user.id)
     if message.text=="Начать игру":
         markup = telebot.types.ReplyKeyboardRemove()
-        bot.send_message(message.chat.id, "Да начнётся игра!!111    ", reply_markup=markup)
+        bot.send_message(message.chat.id, "Да начнётся игра!!111", reply_markup=markup)
         if logic.is_playing or len(logic.player) == 0:
             return
         global CHAT_ID
