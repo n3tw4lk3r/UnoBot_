@@ -4,7 +4,6 @@ import webbrowser
 import logic
 bot = telebot.TeleBot('6872862815:AAEDh0fdb15g8XCjghcW4RIJlLOnsEG_i6M')
 CHAT_ID = None
-HAS_STARTED = {}
 
 @bot.message_handler(commands=['start'])
 def main(info):
@@ -15,9 +14,7 @@ def main(info):
     if logic.is_playing:
         bot.send_message(info.chat.id, 'Не тупи, игра уже идёт.')
         return
-    if HAS_STARTED != {} and HAS_STARTED[info.chat.id]:
-        bot.send_message(info.chat.id, 'Нажми КНОПКУ начать игру, если хочешь поиграть..')
-        return
+    logic.clear_fields()
     global CHAT_ID
     CHAT_ID = info.chat.id
     bot.send_message(info.chat.id,
@@ -70,11 +67,10 @@ def main(info):
     if logic.is_playing:
         markup = telebot.types.ReplyKeyboardRemove()
         bot.send_message(CHAT_ID, 'Игра закончилась ну блииииин(((09((09(((', reply_markup=markup)
-        logic.clear_fields()
-        #logic.player_hasActed[logic.player[logic.pos].name] = True
+        logic.is_playing = False
     else:
         markup = telebot.types.ReplyKeyboardRemove()
-        bot.send_message(info.chat.id, 'игра не запущена', reply_markup=markup)
+        bot.send_message(info.chat.id, 'Игра не запущена(', reply_markup=markup)
 @bot.message_handler(commands=['admin'])
 def main(info):
     bot.send_message(info.chat.id, 'Писать по всем вопросам:@rbedin25, @shout_0_0, @n3tw4lk3r')
@@ -89,6 +85,17 @@ def message_reply(message):
     if message.from_user.first_name not in logic.player_hasActed:
         bot.send_message(message.chat.id, f'Игрок {message.from_user.first_name} добавлен')
         logic.add_player(message.from_user.first_name, message.from_user.id)
+@bot.message_handler(commands=['play'])
+def message_reply(message):
+    markup = telebot.types.ReplyKeyboardRemove()
+    logic.hasStarted = True
+    if logic.is_playing or len(logic.player) == 0:
+        bot.send_message(message.chat.id, "Что-то пошло не так(", reply_markup=markup)
+        return
+    global CHAT_ID
+    bot.send_message(message.chat.id, "Да начнётся игра!!!))", reply_markup=markup)
+    CHAT_ID = message.chat.id
+    logic.game()
 
 @bot.message_handler(commands=['clear'])
 def message_reply(message):
@@ -104,7 +111,6 @@ def message_reply(message):
     if message.text=="Начать игру":
         markup = telebot.types.ReplyKeyboardRemove()
         logic.hasStarted = True
-        HAS_STARTED[message.chat.id] = True
         if logic.is_playing or len(logic.player) == 0:
             bot.send_message(message.chat.id, "Что-то пошло не так(", reply_markup=markup)
             return
