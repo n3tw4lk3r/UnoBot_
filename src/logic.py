@@ -55,7 +55,6 @@ def can_put_card(ind):
         return True
     return False
 
-
 def put_card(ind):
     global player, deck_of_cards, pos, top_of_deck, step
     top_of_deck = player[pos].cards[ind]
@@ -134,6 +133,11 @@ def game():
         if any(len(player[i].cards) == 0 for i in range(len(player))):
             is_playing = False
     unoBot.bot.send_message(unoBot.CHAT_ID, 'Игра закончилась ну блииииин(((09((09(((')
+    clear_fields()
+
+def clear_fields():
+    '''Чистим поля.'''
+    global player, player_hasActed, player_lastMove, deck_of_cards, pos, is_playing
     player = []
     player_hasActed = {}
     player_lastMove = {}
@@ -141,6 +145,7 @@ def game():
     pos = 0
     is_playing = False
     unoBot.bot.send_message(unoBot.CHAT_ID, 'все поля очищены')
+
 file = open("UNO cards.txt", 'r')
 cards = []
 while True:
