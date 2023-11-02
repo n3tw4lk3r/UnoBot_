@@ -48,7 +48,7 @@ def main(info):
 @bot.message_handler(commands=['move'])
 def main(info):
     if logic.is_playing:
-        player = info.from_user.first_name
+        player = info.from_user.username
         if len(info.text.split()) > 1:
             move = info.text.split()[1]
             if logic.player[logic.pos].name == player:
@@ -82,9 +82,9 @@ def main(info):
 
 @bot.message_handler(commands=['join'])
 def message_reply(message):
-    if message.from_user.first_name not in logic.player_hasActed:
-        bot.send_message(message.chat.id, f'Игрок {message.from_user.first_name} добавлен')
-        logic.add_player(message.from_user.first_name, message.from_user.id)
+    if message.from_user.username not in logic.player_hasActed:
+        bot.send_message(message.chat.id, f'Игрок {message.from_user.username} добавлен')
+        logic.add_player(message.from_user.username, message.from_user.id)
 @bot.message_handler(commands=['play'])
 def message_reply(message):
     markup = telebot.types.ReplyKeyboardRemove()
