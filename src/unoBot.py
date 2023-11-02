@@ -4,6 +4,7 @@ import webbrowser
 import logic
 bot = telebot.TeleBot('6872862815:AAEDh0fdb15g8XCjghcW4RIJlLOnsEG_i6M')
 CHAT_ID = None
+HAS_STARTED = {}
 
 @bot.message_handler(commands=['start'])
 def main(info):
@@ -12,6 +13,10 @@ def main(info):
 @bot.message_handler(commands=['start_game'])
 def main(info):
     if logic.is_playing:
+        bot.send_message(info.chat.id, 'Не тупи, игра уже идёт.')
+        return
+    if HAS_STARTED != {} and HAS_STARTED[info.chat.id]:
+        bot.send_message(info.chat.id, 'Нажми КНОПКУ начать игру, если хочешь поиграть..')
         return
     global CHAT_ID
     CHAT_ID = info.chat.id
@@ -98,6 +103,8 @@ def message_reply(message):
             logic.add_player(message.from_user.first_name, message.from_user.id)
     if message.text=="Начать игру":
         markup = telebot.types.ReplyKeyboardRemove()
+        logic.hasStarted = True
+        HAS_STARTED[message.chat.id] = True
         if logic.is_playing or len(logic.player) == 0:
             bot.send_message(message.chat.id, "Что-то пошло не так(", reply_markup=markup)
             return
