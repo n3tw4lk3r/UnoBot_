@@ -113,33 +113,33 @@ def game():
                     a = player_hasActed[player[pos].name]
                 except IndexError:
                     return
-                while player_hasActed[player[pos].name] == False:
+                while is_playing and player_hasActed[player[pos].name] == False:
                     pass
-                player_hasActed[player[pos].name] = False
-                num = player_lastMove[player[pos].name]
-                if num == -1:
-                    if count_move == 0:
-                        player[pos].cards.append(take_top_card())
-                        num = len(player[pos].cards) - 1
-                        unoBot.bot.send_message(unoBot.CHAT_ID, 'карта добавлена:')
-                        msg = '( ' + str(num) + ': ' + str(player[pos].cards[num].name) + ' )'
-                        unoBot.bot.send_message(unoBot.CHAT_ID, msg)
-                        count_move += 1
+                if is_playing:
+                    player_hasActed[player[pos].name] = False
+                    num = player_lastMove[player[pos].name]
+                    if num == -1:
+                        if count_move == 0:
+                            player[pos].cards.append(take_top_card())
+                            num = len(player[pos].cards) - 1
+                            unoBot.bot.send_message(unoBot.CHAT_ID, 'карта добавлена:')
+                            msg = '( ' + str(num) + ': ' + str(player[pos].cards[num].name) + ' )'
+                            unoBot.bot.send_message(unoBot.CHAT_ID, msg)
+                            count_move += 1
+                        else:
+                            unoBot.bot.send_message(unoBot.CHAT_ID, 'хватит тырить карты из колоды')
                     else:
-                        unoBot.bot.send_message(unoBot.CHAT_ID, 'хватит тырить карты из колоды')
-                else:
-                    if can_put_card(num):
-                        put_card(num)
-                        break
-                    else:
-                        unoBot.bot.send_message(unoBot.CHAT_ID, 'Дурачок попробуй ещё')
+                        if can_put_card(num):
+                            put_card(num)
+                            break
+                        else:
+                            unoBot.bot.send_message(unoBot.CHAT_ID, 'Дурачок попробуй ещё')
         if any(len(player[i].cards) == 0 for i in range(len(player))):
             is_playing = False
     unoBot.bot.send_message(unoBot.CHAT_ID, 'Игра закончилась ну блииииин(((09((09(((')
     clear_fields()
 
 def clear_fields():
-    '''Чистим поля.'''
     global player, player_hasActed, player_lastMove, deck_of_cards, pos, is_playing
     player = []
     player_hasActed = {}
@@ -147,7 +147,7 @@ def clear_fields():
     deck_of_cards = []
     pos = 0
     is_playing = False
-    unoBot.bot.send_message(unoBot.CHAT_ID, 'все поля очищены')
+    #unoBot.bot.send_message(unoBot.CHAT_ID, 'все поля очищены')
 
 file = open("UNO cards.txt", 'r')
 cards = []
