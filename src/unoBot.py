@@ -105,9 +105,9 @@ def message_reply(message):
 @bot.message_handler(content_types='text')
 def message_reply(message):
     if message.text=="Присоединиться":
-        if message.from_user.first_name not in logic.player_hasActed:
-            bot.send_message(message.chat.id, f'Игрок {message.from_user.first_name} добавлен')
-            logic.add_player(message.from_user.first_name, message.from_user.id)
+        if message.from_user.username not in logic.player_hasActed:
+            bot.send_message(message.chat.id, f'Игрок {message.from_user.username} добавлен')
+            logic.add_player(message.from_user.username, message.from_user.id)
     if message.text=="Начать игру":
         markup = telebot.types.ReplyKeyboardRemove()
         logic.hasStarted = True
