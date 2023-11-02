@@ -79,7 +79,7 @@ def game():
         unoBot.bot.send_message(unoBot.CHAT_ID, 'верхняя карта: ' + str(top_of_deck.name))
         unoBot.bot.send_sticker(unoBot.CHAT_ID, top_of_deck.stiker)
         msg = ""
-        buttons = []
+        buttons = [types.KeyboardButton("/move")]
         keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=7)
         for i in range(len(player[pos].cards)):
             msg += '( ' + str(i) + ': ' + str(player[pos].cards[i].name) + ' )\n'
@@ -98,7 +98,7 @@ def game():
             player[pos].cards.append(take_top_card())
             num = len(player[pos].cards) - 1
             msg = '( '+ str(num) + ': ' + str(player[pos].cards[num].name) +  ' )'
-            unoBot.bot.send_message(unoBot.CHAT_ID, msg)
+            unoBot.bot.send_message(player[pos].id, msg)
             if can_put_card(num):
                 put_card(num)
                 unoBot.bot.send_message(unoBot.CHAT_ID, 'урааа карта подошлааа')
