@@ -80,7 +80,7 @@ def game():
         unoBot.bot.send_sticker(unoBot.CHAT_ID, top_of_deck.stiker)
         msg = ""
         buttons = [types.KeyboardButton("/move")]
-        keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=7)
+        keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=5)
         for i in range(len(player[pos].cards)):
             msg += '( ' + str(i) + ': ' + str(player[pos].cards[i].name) + ' )\n'
             msgg = '/move ' + str(i)
@@ -122,9 +122,9 @@ def game():
                         if count_move == 0:
                             player[pos].cards.append(take_top_card())
                             num = len(player[pos].cards) - 1
-                            unoBot.bot.send_message(unoBot.CHAT_ID, 'карта добавлена:')
+                            unoBot.bot.send_message(player[pos].id, 'карта добавлена:')
                             msg = '( ' + str(num) + ': ' + str(player[pos].cards[num].name) + ' )'
-                            unoBot.bot.send_message(unoBot.CHAT_ID, msg)
+                            unoBot.bot.send_message(player[pos].id, msg)
                             count_move += 1
                         else:
                             unoBot.bot.send_message(unoBot.CHAT_ID, 'хватит тырить карты из колоды')
