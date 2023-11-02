@@ -58,13 +58,6 @@ def main(info):
                 else:
                      bot.send_message(info.chat.id, 'балбес, напиши нормально')
         else:
-            buttons = [types.KeyboardButton("/move")]
-            keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=5)
-            for i in range(len(player[logic.pos].cards)):
-                msgg = '/move ' + str(i)
-                buttons.append(types.KeyboardButton(msgg))
-            keyboard.add(*buttons)
-            bot.send_message(CHAT_ID, "Карта добавлена", reply_markup=keyboard)
             logic.player_hasActed[player] = True
             logic.player_lastMove[player] = -1
     else:
