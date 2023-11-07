@@ -4,14 +4,6 @@ import webbrowser
 import logic
 bot = telebot.TeleBot('6872862815:AAEDh0fdb15g8XCjghcW4RIJlLOnsEG_i6M')
 CHAT_ID = None
-red = '🟥'
-blue = '🟦'
-yellow = '🟨'
-green = '🟩'
-black = '⬛'
-rainbow = '🌈'
-ph = '🚫'
-
 
 @bot.message_handler(commands=['start'])
 def main(info):
