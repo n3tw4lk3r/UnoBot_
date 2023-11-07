@@ -155,8 +155,14 @@ while True:
     while i < len(mas):
         st += '_' + mas[i]
         i += 1
-
-    cards.append(card(mas[0], mas[1], mas[2], mas[3], mas[4], st))
+    p = mas[4].split()
+    s = ''
+    for j in range(len(p)):
+        if p[j][0] == '!':
+            s += chr(int(p[j][1:]))
+        else:
+            s += p[j]
+    cards.append(card(mas[0], mas[1], mas[2], mas[3], s, st))
 file.close()
 
 index_in_cards = [i for i in range(len(cards))]
