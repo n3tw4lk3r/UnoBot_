@@ -2,7 +2,7 @@ import numpy as np
 import unoBot
 from telebot import types
 import telebot
-
+# -*- coding: UTF-8 -*-
 class card:
     def __init__(self, num, col, step, count_cards, name_of_card, stiker_id):
         if num == 'universal':
@@ -155,6 +155,7 @@ while True:
     while i < len(mas):
         st += '_' + mas[i]
         i += 1
+
     cards.append(card(mas[0], mas[1], mas[2], mas[3], mas[4], st))
 file.close()
 
