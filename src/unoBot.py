@@ -4,6 +4,14 @@ import webbrowser
 import logic
 bot = telebot.TeleBot('6872862815:AAEDh0fdb15g8XCjghcW4RIJlLOnsEG_i6M')
 CHAT_ID = None
+red = '🟥'
+blue = '🟦'
+yellow = '🟨'
+green = '🟩'
+black = '⬛'
+rainbow = '🌈'
+ph = '🚫'
+
 
 @bot.message_handler(commands=['start'])
 def main(info):
@@ -38,23 +46,6 @@ def main(info):
 def main(info):
     bot.send_sticker(info.chat.id, 'CAACAgIAAxkBAAEBpnZlPXSscqnvN_rM-uZusGxvanFG2wACuCQAArgGAUiH8Vp5cuhbHDAE')
 
-@bot.message_handler(commands=['move'])
-def main(info):
-    if logic.is_playing:
-        player = info.from_user.username
-        if len(info.text.split()) > 1:
-            move = info.text.split()[1]
-            if logic.player[logic.pos].name == player:
-                if move.isdigit() and 0 <= int(move) and int(move) < len(logic.player[logic.pos].cards):
-                    logic.player_hasActed[player] = True
-                    logic.player_lastMove[player] = int(move)
-                else:
-                     bot.send_message(info.chat.id, 'балбес, напиши нормально')
-        elif logic.player[logic.pos].name == player:
-            logic.player_hasActed[player] = True
-            logic.player_lastMove[player] = -1
-    else:
-        bot.send_message(info.chat.id, 'Игра не запущена(')
 @bot.message_handler(commands=['end_game'])
 def main(info):
     if logic.is_playing:
@@ -70,7 +61,7 @@ def main(info):
 
 @bot.message_handler(commands=['help'])
 def main(info):
-    msg = 'Сам себе помаги!\n Но если прям надо то: \n /start_game - запускает игру \n /end_game - заканчивает игру \n /move - выбор карты из руки или взять карту\n /admin - связь с админами'
+    msg = 'Сам себе помаги!\n Но если прям надо то: \n /start_game - запускает игру \n /end_game - заканчивает игру \n выбор картоы нажатием на кнопку в сообщениях\n /admin - связь с админами \n /join - присоедениться к игре \n /play- начать игру'
     bot.send_message(info.chat.id, msg)
 
 @bot.message_handler(commands=['join'])
