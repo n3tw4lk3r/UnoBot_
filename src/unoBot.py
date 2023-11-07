@@ -34,13 +34,6 @@ def main(info):
         msg += str(p.name) + "\n"
     bot.send_message(info.chat.id, msg)
 
-@bot.message_handler(commands=['bomb'])
-async def cmd_bomb(message: types.Message):
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1, selective=True)
-    buttons = ['"Небольшой толчок..."', 'Разминировать']
-    keyboard.add(*buttons)
-    await message.reply('Решается судьба Мегатонны...', reply_markup=keyboard)
-
 @bot.message_handler(commands=['stiker'])
 def main(info):
     bot.send_sticker(info.chat.id, 'CAACAgIAAxkBAAEBpnZlPXSscqnvN_rM-uZusGxvanFG2wACuCQAArgGAUiH8Vp5cuhbHDAE')
@@ -57,7 +50,7 @@ def main(info):
                     logic.player_lastMove[player] = int(move)
                 else:
                      bot.send_message(info.chat.id, 'балбес, напиши нормально')
-        else:
+        elif logic.player[logic.pos].name == player:
             logic.player_hasActed[player] = True
             logic.player_lastMove[player] = -1
     else:
@@ -118,3 +111,14 @@ def message_reply(message):
         bot.send_message(message.chat.id, "Да начнётся игра!!!))", reply_markup=markup)
         CHAT_ID = message.chat.id
         logic.game()
+    if logic.is_playing:
+        player = message.from_user.username
+        if (message.text == "Взять карту" or message.text == "Пропуск хода") and logic.player[logic.pos].name == player:
+            logic.player_hasActed[player] = True
+            logic.player_lastMove[player] = -1
+        if logic.player[logic.pos].name == player and any(message.text == logic.player[logic.pos].cards[ind].name for ind in range(len(logic.player[logic.pos].cards))):
+            for ind in range(len(logic.player[logic.pos].cards)):
+                if message.text == logic.player[logic.pos].cards[ind].name:
+                    logic.player_hasActed[player] = True
+                    logic.player_lastMove[player] = int(ind)
+                    break
