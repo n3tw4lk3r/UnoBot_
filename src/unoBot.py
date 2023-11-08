@@ -12,7 +12,7 @@ def main(info):
 #запуск создания игры
 @bot.message_handler(commands=['start_game'])
 def main(info):
-    if logic.the_game_is_running:
+    if logic.game_is_running:
         bot.send_message(info.chat.id, 'Не тупи, игра уже идёт.')
         return
 
@@ -34,7 +34,7 @@ def main(info):
 @bot.message_handler(commands=['stats'])
 def main(info):
     msg = "Уважаемые игроки:\n"
-    for player in logic.player:
+    for player in logic.players:
         msg += str(player.name) + "\n"
     bot.send_message(info.chat.id, msg)
 
@@ -49,10 +49,9 @@ def main(info):
 @bot.message_handler(commands=['end_game'])
 def main(info):
     #Проверяет была ли запущенна игра
-    if logic.the_game_is_running:
+    if logic.game_is_running:
         markup = telebot.types.ReplyKeyboardRemove()
-        bot.send_message(CHAT_ID, 'Игра закончилась ну блииииин(((09((09(((', reply_markup=markup)
-        logic.the_game_is_running = False
+        logic.game_is_running = False
     else:
         markup = telebot.types.ReplyKeyboardRemove()
         bot.send_message(info.chat.id, 'Игра не запущена(', reply_markup=markup)
@@ -75,63 +74,74 @@ def main(info):
 
 #Присоединение игрока после начала игры
 @bot.message_handler(commands=['join'])
-def message_reply(message):
-    if message.from_user.username not in logic.player_hasActed:
-        bot.send_message(message.chat.id, f'Игрок {message.from_user.username} добавлен')
-        logic.add_player(message.from_user.username, message.from_user.id)
+def message_reply(info):
+    if info.from_user.username not in logic.player_hasActed:
+        bot.send_message(info.chat.id, f'Игрок {info.from_user.username} добавлен')
+        logic.add_player(info.from_user.username, info.from_user.id)
 
 
 #запуск игры
 @bot.message_handler(commands=['play'])
-def message_reply(message):
+def message_reply(info):
     keyboard = telebot.types.ReplyKeyboardRemove()
-    logic.hasStarted = True
 
     #проверка на условия запуска игры
-    if logic.the_game_is_running or len(logic.player) == 0:
-        bot.send_message(message.chat.id, "Что-то пошло не так(", reply_markup=keyboard)
+    if logic.game_is_running:
+        bot.send_message(info.chat.id, "Что-то пошло не так(", reply_markup=keyboard)
         return
 
     global CHAT_ID
-    bot.send_message(message.chat.id, "Да начнётся игра!!!))", reply_markup=keyboard)
-    CHAT_ID = message.chat.id
+    bot.send_message(info.chat.id, "Да начнётся игра!!!))", reply_markup=keyboard)
+    CHAT_ID = info.chat.id
     logic.game()
 
 #очистка полей кнопок
 @bot.message_handler(commands=['clear'])
-def message_reply(message):
+def message_reply(info):
     markup = telebot.types.ReplyKeyboardRemove()
-    bot.send_message(message.chat.id, "Очищаю кнопочки", reply_markup=markup)
+    bot.send_message(info.chat.id, "Очищаю кнопочки", reply_markup=markup)
 
 
 
 @bot.message_handler(content_types='text')
-def message_reply(message):
-    if message.text=="Присоединиться":
-        if message.from_user.username not in logic.player_hasActed:
-            bot.send_message(message.chat.id, f'Игрок {message.from_user.username} добавлен')
-            logic.add_player(message.from_user.username, message.from_user.id)
+def message_reply(info):
+    if info.text=="Присоединиться":
+        if info.from_user.username not in logic.player_hasActed:
+            bot.send_message(info.chat.id, f'Игрок {info.from_user.username} добавлен')
+            logic.add_player(info.from_user.username, info.from_user.id)
 
-    if message.text=="Начать игру":
+    if info.text=="Начать игру":
         markup = telebot.types.ReplyKeyboardRemove()
-        logic.hasStarted = True
-        if logic.the_game_is_running or len(logic.player) == 0:
-            bot.send_message(message.chat.id, "Что-то пошло не так(", reply_markup=markup)
+        if logic.game_is_running:
+            bot.send_message(info.chat.id, "Что-то пошло не так(", reply_markup=markup)
             return
         global CHAT_ID
-        bot.send_message(message.chat.id, "Да начнётся игра!!!))", reply_markup=markup)
-        CHAT_ID = message.chat.id
+        bot.send_message(info.chat.id, "Да начнётся игра!!!))", reply_markup=markup)
+        CHAT_ID = info.chat.id
         logic.game()
 
 
-    if logic.the_game_is_running:
-        player = message.from_user.username
-        if (message.text == "Взять карту" or message.text == "Пропуск хода") and logic.player[logic.current_position].name == player:
+    if logic.game_is_running:
+        player = info.from_user.username
+        if (info.text == "Взять карту" or info.text == "Пропуск хода") and logic.players[logic.current_position].name == player:
             logic.player_hasActed[player] = True
             logic.player_lastMove[player] = -1
-        if logic.player[logic.current_position].name == player and any(message.text == logic.player[logic.current_position].cards[ind].name for ind in range(len(logic.player[logic.current_position].cards))):
-            for ind in range(len(logic.player[logic.current_position].cards)):
-                if message.text == logic.player[logic.current_position].cards[ind].name:
+        if logic.players[logic.current_position].name == player and any(info.text == logic.players[logic.current_position].cards[ind].name for ind in range(len(logic.players[logic.current_position].cards))):
+            for ind in range(len(logic.players[logic.current_position].cards)):
+                if info.text == logic.players[logic.current_position].cards[ind].name:
                     logic.player_hasActed[player] = True
                     logic.player_lastMove[player] = int(ind)
                     break
+    if logic.game_is_running:
+        player = info.from_user.username
+        if logic.players[logic.current_position].name == player and logic.next_color == False and info.text in '🟩🟨🟦🟥':
+            logic.player_hasActed[player] = True
+            match info.text:
+                case '🟩':
+                    logic.next_color = 'green'
+                case '🟨':
+                    logic.next_color = 'yellow'
+                case '🟦':
+                    logic.next_color = 'blue'
+                case '🟥':
+                    logic.next_color = 'red'
