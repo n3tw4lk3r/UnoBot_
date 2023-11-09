@@ -84,7 +84,6 @@ def put_card(ind):
 
 def game():
     global players, deck_of_cards, current_position, top_of_deck, step, player_hasActed, game_is_running, player_lastMove
-    game_is_running = True
     current_position = 0
     step = 1
     top_of_deck = take_top_card()
