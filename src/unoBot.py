@@ -118,6 +118,7 @@ def message_reply(info):
         global CHAT_ID
         bot.send_message(info.chat.id, "Да начнётся игра!!!))", reply_markup=markup)
         CHAT_ID = info.chat.id
+        logic.game_is_running = True
         logic.game()
 
 
