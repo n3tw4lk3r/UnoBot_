@@ -49,7 +49,7 @@ def add_player(name, iid):
 
 def can_put_card(ind):
     global players, top_of_deck, current_position
-    if ((players[current_position].cards[ind].number == top_of_deck.number or players[current_position].cards[ind].color == top_of_deck.color)) or (players[current_position].cards[ind].number == 'universal' and players[current_position].cards[ind].color == 'universal') or (top_of_deck.number == 'universal' and top_of_deck.color == 'universal'):
+    if ((players[current_position].cards[ind].number == top_of_deck.number or players[current_position].cards[ind].color == top_of_deck.color)) or (players[current_position].cards[ind].number == 'universal' and players[current_position].cards[ind].color == 'universal'):
         return True
     return False
 
