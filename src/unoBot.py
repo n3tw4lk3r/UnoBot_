@@ -112,7 +112,7 @@ def message_reply(info):
 
     if info.text=="Начать игру":
         markup = telebot.types.ReplyKeyboardRemove()
-        if logic.game_is_running:
+        if logic.game_is_running or len(logic.players) == 0:
             bot.send_message(info.chat.id, "Что-то пошло не так(", reply_markup=markup)
             return
         global CHAT_ID
