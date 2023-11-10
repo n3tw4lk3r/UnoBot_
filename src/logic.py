@@ -15,10 +15,13 @@ class card:
                 self.change_of_step = - int(step[step.find(' ') + 1:])
             case 'through':
                 self.change_of_step = int(step[step.find(' ') + 1:]) + 1
+            case _:
+                self.change_of_step = int(step)
         self.cards_to_next_player = int(count_cards[1:])
         self.name = name_of_card
         self.stiker = stiker_id
-
+    def copy(self):
+        return card(self.number, self.color, str(self.change_of_step), '+' + str(self.cards_to_next_player), self.name, self.stiker)
 class player:
     def __init__(self, st, idd):
         self.name = st
@@ -38,7 +41,7 @@ def take_top_card():
     global deck_of_cards
     if len(deck_of_cards) == 0:
         new_deck()
-    ans = deck_of_cards[0]
+    ans = deck_of_cards[0].copy()
     deck_of_cards = deck_of_cards[1:]
     return ans
 
@@ -51,13 +54,13 @@ def add_player(name, iid):
 
 def can_put_card(ind):
     global players, top_of_deck, current_position
-    if ((players[current_position].cards[ind].number == top_of_deck.number or players[current_position].cards[ind].color == top_of_deck.color)) or (players[current_position].cards[ind].number == 'universal' and players[current_position].cards[ind].color == 'universal'):
+    if (top_of_deck.color == 'universal') or (players[current_position].cards[ind].number == top_of_deck.number or players[current_position].cards[ind].color == top_of_deck.color) or (players[current_position].cards[ind].number == 'universal' and players[current_position].cards[ind].color == 'universal'):
         return True
     return False
 
 def put_card(ind):
     global players, deck_of_cards, current_position, top_of_deck, step, next_color, player_hasActed, game_is_running
-    top_of_deck = players[current_position].cards[ind]
+    top_of_deck = players[current_position].cards[ind].copy()
     players[current_position].cards = players[current_position].cards[:ind] + players[current_position].cards[ind + 1:]
     for i in range(top_of_deck.cards_to_next_player):
         players[(len(players) + current_position + step) % len(players)].cards.append(take_top_card())
@@ -93,11 +96,15 @@ def game():
         time.sleep(1)
         unoBot.bot.send_message(unoBot.CHAT_ID, 'Верхняя карта: ', reply_markup=markup)
         unoBot.bot.send_sticker(unoBot.CHAT_ID, top_of_deck.stiker)
+        #print(top_of_deck.name, top_of_deck.number, top_of_deck.color)
         buttons = [types.KeyboardButton("Взять карту")]
         keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4, selective=True)
         for i in range(len(players[current_position].cards)):
             msg = players[current_position].cards[i].name
             buttons.append(types.KeyboardButton(msg))
+        #     print(players[current_position].cards[i].name, players[current_position].cards[i].number,
+        #           players[current_position].cards[i].color)
+        # print()
         keyboard.add(*buttons)
         time.sleep(1)
         unoBot.bot.send_message(unoBot.CHAT_ID, '@' + players[current_position].name +' выбери номер карты, которую кинешь или возьми из колоды', reply_markup=keyboard)
