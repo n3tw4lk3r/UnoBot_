@@ -1,8 +1,11 @@
 import telebot
 from telebot import types
 import logic
+from threading import Thread
+
 bot = telebot.TeleBot('6872862815:AAEDh0fdb15g8XCjghcW4RIJlLOnsEG_i6M')
-CHAT_ID = None
+threadsByChatId = {}
+
 #начальное приветствие
 @bot.message_handler(commands=['start'])
 def main(info):
@@ -12,14 +15,12 @@ def main(info):
 #запуск создания игры
 @bot.message_handler(commands=['start_game'])
 def main(info):
-    if logic.game_is_running:
+    if logic.isGameRunning(info.chat.id):
         bot.send_message(info.chat.id, 'Не тупи, игра уже идёт.')
         return
 
-    logic.clear_fields()
-    global CHAT_ID
-    CHAT_ID = info.chat.id
-
+    logic.games_byId[info.chat.id] = logic.game(info.chat.id)
+    print(info.chat.id)
     bot.send_message(info.chat.id,'''Охаё, они чан) Создай свою игру\n''')
 
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -34,7 +35,7 @@ def main(info):
 @bot.message_handler(commands=['stats'])
 def main(info):
     msg = "Уважаемые игроки:\n"
-    for player in logic.players:
+    for player in logic.games_byId[info.chat.id].players:
         msg += str(player.name) + "\n"
     bot.send_message(info.chat.id, msg)
 
@@ -49,9 +50,9 @@ def main(info):
 @bot.message_handler(commands=['end_game'])
 def main(info):
     #Проверяет была ли запущенна игра
-    if logic.game_is_running:
+    if logic.games_byId[info.chat.id].isRunning:
         markup = telebot.types.ReplyKeyboardRemove()
-        logic.game_is_running = False
+        logic.games_byId[info.chat.id].isRunning = False
     else:
         markup = telebot.types.ReplyKeyboardRemove()
         bot.send_message(info.chat.id, 'Игра не запущена(', reply_markup=markup)
@@ -61,7 +62,6 @@ def main(info):
 @bot.message_handler(commands=['admin'])
 def main(info):
     bot.send_message(info.chat.id, 'Писать по всем вопросам:@rbedin25, @shout_0_0, @n3tw4lk3r')
-
 
 
 #Помощь с командами
@@ -78,9 +78,9 @@ def main(info):
 #Присоединение игрока после начала игры
 @bot.message_handler(commands=['join'])
 def message_reply(info):
-    if info.from_user.username not in logic.player_hasActed:
+    if info.from_user.username not in logic.games_byId[info.chat.id].player_hasActed:
         bot.send_message(info.chat.id, f'Игрок {info.from_user.username} добавлен')
-        logic.add_player(info.from_user.username, info.from_user.id)
+        logic.games_byId[info.chat.id].add_player(info.from_user.username, info.from_user.id)
 
 
 #запуск игры
@@ -89,14 +89,15 @@ def message_reply(info):
     keyboard = telebot.types.ReplyKeyboardRemove()
 
     #проверка на условия запуска игры
-    if logic.game_is_running:
+    if logic.games_byId[info.chat.id].isRunning:
         bot.send_message(info.chat.id, "Что-то пошло не так(", reply_markup=keyboard)
         return
 
-    global CHAT_ID
     bot.send_message(info.chat.id, "Да начнётся игра!!!))", reply_markup=keyboard)
-    CHAT_ID = info.chat.id
-    logic.game()
+    logic.games_byId[info.chat.id].isRunning = True
+    
+    threadsByChatId[info.chat.id] = Thread(target=logic.games_byId[info.chat.id].game)
+    threadsByChatId[info.chat.id].start()
 
 #очистка полей кнопок
 @bot.message_handler(commands=['clear'])
@@ -105,47 +106,46 @@ def message_reply(info):
     bot.send_message(info.chat.id, "Очищаю кнопочки", reply_markup=markup)
 
 
-
 @bot.message_handler(content_types='text')
 def message_reply(info):
     if info.text=="Присоединиться":
-        if info.from_user.username not in logic.player_hasActed:
+        if info.from_user.username not in logic.games_byId[info.chat.id].player_hasActed:
             bot.send_message(info.chat.id, f'Игрок {info.from_user.username} добавлен')
-            logic.add_player(info.from_user.username, info.from_user.id)
+            logic.games_byId[info.chat.id].add_player(info.from_user.username, info.from_user.id)
 
     if info.text=="Начать игру":
         markup = telebot.types.ReplyKeyboardRemove()
-        if logic.game_is_running or len(logic.players) == 0:
+        if logic.games_byId[info.chat.id].isRunning or len(logic.games_byId[info.chat.id].players) == 0:
             bot.send_message(info.chat.id, "Что-то пошло не так(", reply_markup=markup)
             return
-        global CHAT_ID
         bot.send_message(info.chat.id, "Да начнётся игра!!!))", reply_markup=markup)
-        CHAT_ID = info.chat.id
-        logic.game_is_running = True
-        logic.game()
+        logic.games_byId[info.chat.id].isRunning = True
+        threadsByChatId[info.chat.id] = Thread(target=logic.games_byId[info.chat.id].game)
+        threadsByChatId[info.chat.id].start()
 
-
-    if logic.game_is_running:
+    if logic.games_byId[info.chat.id].isRunning:
         player = info.from_user.username
-        if (info.text == "Взять карту" or info.text == "Пропуск хода") and logic.players[logic.current_position].name == player:
-            logic.player_hasActed[player] = True
-            logic.player_lastMove[player] = -1
-        if logic.players[logic.current_position].name == player and any(info.text == logic.players[logic.current_position].cards[ind].name for ind in range(len(logic.players[logic.current_position].cards))):
-            for ind in range(len(logic.players[logic.current_position].cards)):
-                if info.text == logic.players[logic.current_position].cards[ind].name:
-                    logic.player_hasActed[player] = True
-                    logic.player_lastMove[player] = int(ind)
+        if (info.text == "Взять карту" or info.text == "Пропуск хода") and logic.games_byId[info.chat.id].players[logic.games_byId[info.chat.id].current_position].name == player:
+            logic.games_byId[info.chat.id].player_hasActed[player] = True
+            logic.games_byId[info.chat.id].player_lastMove[player] = -1
+        if logic.games_byId[info.chat.id].players[logic.games_byId[info.chat.id].current_position].name == player and any(info.text == logic.games_byId[info.chat.id].players[logic.games_byId[info.chat.id].current_position].cards[ind].name for ind in range(len(logic.games_byId[info.chat.id].players[logic.games_byId[info.chat.id].current_position].cards))):
+            for ind in range(len(logic.games_byId[info.chat.id].players[logic.games_byId[info.chat.id].current_position].cards)):
+                if info.text == logic.games_byId[info.chat.id].players[logic.games_byId[info.chat.id].current_position].cards[ind].name:
+                    
+                    logic.games_byId[info.chat.id].player_hasActed[player] = True
+                    logic.games_byId[info.chat.id].player_lastMove[player] = int(ind)
                     break
-    if logic.game_is_running:
+    
+    if logic.games_byId[info.chat.id].isRunning:
         player = info.from_user.username
-        if logic.players[logic.current_position].name == player and logic.next_color == False and info.text in '🟩🟨🟦🟥':
-            logic.player_hasActed[player] = True
+        if logic.games_byId[info.chat.id].players[logic.games_byId[info.chat.id].current_position].name == player and logic.games_byId[info.chat.id].next_color is False and info.text in '🟩🟨🟦🟥':
+            logic.games_byId[info.chat.id].player_hasActed[player] = True
             match info.text:
                 case '🟩':
-                    logic.next_color = 'green'
+                    logic.games_byId[info.chat.id].next_color = 'green'
                 case '🟨':
-                    logic.next_color = 'yellow'
+                    logic.games_byId[info.chat.id].next_color = 'yellow'
                 case '🟦':
-                    logic.next_color = 'blue'
+                    logic.games_byId[info.chat.id].next_color = 'blue'
                 case '🟥':
                     logic.next_color = 'red'
