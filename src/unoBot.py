@@ -95,7 +95,7 @@ def message_reply(info):
 
     bot.send_message(info.chat.id, "Да начнётся игра!!!))", reply_markup=keyboard)
     logic.games_byId[info.chat.id].isRunning = True
-    
+
     threadsByChatId[info.chat.id] = Thread(target=logic.games_byId[info.chat.id].game)
     threadsByChatId[info.chat.id].start()
 
@@ -131,11 +131,11 @@ def message_reply(info):
         if logic.games_byId[info.chat.id].players[logic.games_byId[info.chat.id].current_position].name == player and any(info.text == logic.games_byId[info.chat.id].players[logic.games_byId[info.chat.id].current_position].cards[ind].name for ind in range(len(logic.games_byId[info.chat.id].players[logic.games_byId[info.chat.id].current_position].cards))):
             for ind in range(len(logic.games_byId[info.chat.id].players[logic.games_byId[info.chat.id].current_position].cards)):
                 if info.text == logic.games_byId[info.chat.id].players[logic.games_byId[info.chat.id].current_position].cards[ind].name:
-                    
+
                     logic.games_byId[info.chat.id].player_hasActed[player] = True
                     logic.games_byId[info.chat.id].player_lastMove[player] = int(ind)
                     break
-    
+
     if logic.games_byId[info.chat.id].isRunning:
         player = info.from_user.username
         if logic.games_byId[info.chat.id].players[logic.games_byId[info.chat.id].current_position].name == player and logic.games_byId[info.chat.id].next_color is False and info.text in '🟩🟨🟦🟥':
@@ -148,4 +148,4 @@ def message_reply(info):
                 case '🟦':
                     logic.games_byId[info.chat.id].next_color = 'blue'
                 case '🟥':
-                    logic.next_color = 'red'
+                    logic.games_byId[info.chat.id].next_color = 'red'
