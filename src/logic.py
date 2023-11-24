@@ -1,8 +1,8 @@
+import time
 import numpy as np
 import unoBot
 from telebot import types
 import telebot
-import time
 
 
 class card:
@@ -21,7 +21,7 @@ class card:
         self.cards_to_next_player = int(count_cards[1:])
         self.name = name_of_card
         self.stiker = stiker_id
-    
+
     def copy(self):
         return card(self.number, self.color, str(self.change_of_step), '+' + str(self.cards_to_next_player), self.name, self.stiker)
 
@@ -46,7 +46,6 @@ class game:
         self.isRunning = False
         self.chatId = tgId
 
-        
         self.cards = []
         file = open("UNO cards.txt", 'r')
         while True:
@@ -81,7 +80,6 @@ class game:
         for i in range(len(self.index_in_cards)):
             self.deck_of_cards.append(self.cards[self.index_in_cards[i]])
 
-
     def take_top_card(self):
         if len(self.deck_of_cards) == 0:
             self.new_deck()
@@ -114,7 +112,6 @@ class game:
             buttons = [types.KeyboardButton("🟦"), types.KeyboardButton("🟨"), types.KeyboardButton("🟥"), types.KeyboardButton("🟩")]
             keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4, selective=True)
             keyboard.add(*buttons)
-            time.sleep(0.5)
             unoBot.bot.send_message(self.chatId, '@' + self.players[self.current_position].name + ' выбери будущий цвет', reply_markup=keyboard)
             self.next_color = False
             self.player_hasActed[self.players[self.current_position].name] = False
@@ -136,18 +133,13 @@ class game:
 
         while self.isRunning:
             markup = telebot.types.ReplyKeyboardRemove()
-            time.sleep(1)
             unoBot.bot.send_message(self.chatId, 'Верхняя карта: ', reply_markup=markup)
             unoBot.bot.send_sticker(self.chatId, self.top_of_deck.stiker)
-            #print(top_of_deck.name, top_of_deck.number, top_of_deck.color)
             buttons = [types.KeyboardButton("Взять карту")]
             keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4, selective=True)
             for i in range(len(self.players[self.current_position].cards)):
                 msg = self.players[self.current_position].cards[i].name
                 buttons.append(types.KeyboardButton(msg))
-            #     print(players[current_position].cards[i].name, players[current_position].cards[i].number,
-            #           players[current_position].cards[i].color)
-            # print()
             keyboard.add(*buttons)
             time.sleep(1)
             unoBot.bot.send_message(self.chatId, '@' + self.players[self.current_position].name +' выбери номер карты, которую кинешь или возьми из колоды', reply_markup=keyboard)
@@ -181,31 +173,26 @@ class game:
                                                 reply_markup=keyboard)
                     else:
                         if all( (not self.can_put_card(i)) for i in range(len(self.players[self.current_position].cards))):
-                            time.sleep(1)
                             unoBot.bot.send_message(self.chatId, 'Лошарик, пропускаешь ход')
                             self.current_position = (len(self.players) + self.current_position + self.step) % len(self.players)
                             break
                         else:
-                            time.sleep(1)
                             unoBot.bot.send_message(self.chatId, 'хватит тырить карты из колоды')
                 else:
                     if self.can_put_card(num_in_players_cards):
                         self.put_card(num_in_players_cards)
                         break
                     else:
-                        time.sleep(1)
                         unoBot.bot.send_message(self.chatId, 'Дурачок попробуй ещё')
 
             if any(len(self.players[i].cards) == 0 for i in range(len(self.players))):
                 for i in range(len(self.players)):
                     if len(self.players[i].cards) == 0:
-                        time.sleep(1)
                         unoBot.bot.send_message(self.chatId,
-                                                f'ПОЗДРАВЛЯЕМ С ПОБЕДОЙ @{players[i].name}')
+                                                f'ПОЗДРАВЛЯЕМ С ПОБЕДОЙ @{self.players[i].name}')
                 self.isRunning = False
 
         markup = telebot.types.ReplyKeyboardRemove()
-        time.sleep(1)
         unoBot.bot.send_message(self.chatId,
                                 'Игра закончилась ну блииииин(((09((09(((',
                                 reply_markup=markup)
