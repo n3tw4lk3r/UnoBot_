@@ -4,7 +4,6 @@ import unoBot
 from telebot import types
 import telebot
 
-
 class card:
     def __init__(self, num, col, step, count_cards, name_of_card, stiker_id):
         self.number = num
