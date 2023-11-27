@@ -4,6 +4,7 @@ import logic
 import telebot
 from telebot import types
 from threading import Thread
+
 def start(info):
     '''Начальное приветствие.'''
     unoBot.bot.send_message(info.chat.id, 'Этот бот предназначен для проведения игры уно в телеграмме. Для запуска игры добавьте бота в свою группу, и напишите /start_game.')
