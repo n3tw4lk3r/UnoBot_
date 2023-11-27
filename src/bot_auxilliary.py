@@ -9,6 +9,9 @@ def start(info):
     '''Начальное приветствие.'''
     unoBot.bot.send_message(info.chat.id, 'Этот бот предназначен для проведения игры уно в телеграмме. Для запуска игры добавьте бота в свою группу, и напишите /start_game.')
 
+def admin(info):
+    unoBot.bot.send_message(info.chat.id, 'Разрабы: ')
+    
 def stiker(info):
     '''Небольшая пасхалка.'''
     unoBot.bot.send_sticker(info.chat.id, 'CAACAgIAAxkBAAEBpnZlPXSscqnvN_rM-uZusGxvanFG2wACuCQAArgGAUiH8Vp5cuhbHDAE')

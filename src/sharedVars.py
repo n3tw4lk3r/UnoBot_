@@ -1,9 +1,8 @@
 import telebot
 from threading import Thread
-
-from queue_stream import *
+import queue_stream
 
 threadsByChatId = {}
-st = stream()
+st = queue_stream.stream()
 q = Thread(target= st.run)
 q.start()
