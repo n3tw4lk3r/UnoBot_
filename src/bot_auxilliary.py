@@ -11,7 +11,7 @@ def start(info):
 
 def admin(info):
     unoBot.bot.send_message(info.chat.id, 'Разрабы: ')
-    
+
 def stiker(info):
     '''Небольшая пасхалка.'''
     unoBot.bot.send_sticker(info.chat.id, 'CAACAgIAAxkBAAEBpnZlPXSscqnvN_rM-uZusGxvanFG2wACuCQAArgGAUiH8Vp5cuhbHDAE')
