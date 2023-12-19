@@ -1,8 +1,6 @@
 import telebot
 from telebot import types
 import logic
-from threading import Thread
-import time
 import sharedVars
 
 bot = telebot.TeleBot('6872862815:AAEDh0fdb15g8XCjghcW4RIJlLOnsEG_i6M')
