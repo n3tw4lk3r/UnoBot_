@@ -1,4 +1,3 @@
-import telebot
 from threading import Thread
 import queue_stream
 
