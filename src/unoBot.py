@@ -3,7 +3,7 @@ from telebot import types
 import logic
 import sharedVars
 
-bot = telebot.TeleBot('6872862815:AAEDh0fdb15g8XCjghcW4RIJlLOnsEG_i6M')
+bot = telebot.TeleBot(IP)
 
 @bot.message_handler(commands=['start'])
 def main(info):
